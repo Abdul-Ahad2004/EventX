@@ -8,12 +8,13 @@
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
-  "author": "haroontahirr100@gmail.com",
+  "author": "Abdul Ahad",
   "license": "ISC",
   "dependencies": {
     "cookie-parser": "^1.4.6",
     "express": "^4.19.2",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.1"
   },
   "devDependencies": {
     "dotenv": "^16.4.5",
