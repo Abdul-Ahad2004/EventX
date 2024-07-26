@@ -21,11 +21,12 @@ const userschema =new Schema(
         required:true,
 
       },
-      PhoneNumber:{
+      phoneNumber:{
         type:String,
         required:true,
+        unique:true,
       }
     }
 )
 
-export const User=mongoose.model("User",userschema)
+export const User = mongoose.model("User",userschema)
