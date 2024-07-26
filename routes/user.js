@@ -1,10 +1,10 @@
 import express from "express";
-import { UserController } from "../controllers/user.js";
 import { AuthMiddleware } from "../middlewares/auth.js";
+import { AuthController } from "../controllers/user.js"
 
 const router = express.Router();
 
-router.get("/:id", AuthMiddleware.verify, UserController.getUser)
-
+router.post("/signup", AuthController.signup)
+router.post("/login", AuthController.login)
 
 export default router;

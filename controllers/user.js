@@ -1,22 +1,63 @@
-import { accounts } from "../constants/accounts.js";
-
-export class UserController {
-  static async getUser(req, res) {
-    // Check if the user is Authenticated
+import express from "express"
+import jwt from "jsonwebtoken"
 
 
-    const userId = req.params.id;
+export class AuthController {
+  /**
+   * @param {express.Request} req 
+   * @param {express.Response} res 
+   */
+  static async signup(req, res) {
+    try {
+     
+      const token= jwt.sign({
+        // data: user.id
+      }, "secret");
 
-    const user = accounts.find((account) => account.id === parseInt(userId));
-
-    if (!user) {
-      return res.status(404).send({ message: "User not found" });
+      res.cookie("id",token,
+        {
+          httpOnly:true
+        }
+      )
+    
+      res.status(201).send({
+        message: "User created successfully",
+        body: user,
+      })
+    } catch (error) {
+      res.status(500).send({
+        message: (error.message || error)
+      })
     }
-
-    res.send({ ...user })
   }
+    
+  static async login(req, res) {
+    try {
+      const { email, password } = req.body;
 
-  static async updateUser(req, res) {
-    // check if the user is Authenticated
+      for (let i = 0; i < accounts.length; i++) {
+        if (accounts[i].email === email) {
+          if (accounts[i].password === password) {
+            return res.status(200).send({
+              message: "Login successful",
+              body: accounts[i],
+            })
+          } else {
+            return res.status(401).send({
+              message: "Invalid email or password",
+            })
+          }
+        } 
+      }
+
+      return res.status(401).send({
+        message: "Credentials not found",
+      })
+    } catch (error) {
+      res.status(500).send({
+        message: (error.message || error)
+      })
+    }
+   
   }
 }
