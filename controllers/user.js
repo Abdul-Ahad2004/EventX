@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.js";
+import {Event} from "../models/event.js"
 import bcrypt from "bcrypt";
 
 export class UserController {
@@ -105,5 +106,40 @@ export class UserController {
     .status(201)
     .clearCookie("id", options)
     .json("User logged Out")
+}
+
+static async postevent (req,res){
+  try {
+    const{eventType,location,date,budget,preferences}=req.body
+  
+    const token=req.cookies?.id
+    const userId=jwt.verify(token,'secret').data
+
+  
+    if(eventType==="" || location===""|| date===""|| budget===""||preferences.length===0){
+      return res.status(400).json("All fields are required")
+    }
+  
+    const event =await Event.create({
+      eventType,
+      location,
+      date:Date(date),
+      budget,
+      preferences,
+      user:userId,
+    })
+  
+    const cereatedEvent =await Event.findById(event._id)
+  
+    if(!cereatedEvent)
+    {
+      return res.status(500).json("Event not created")
+    }
+  
+    return res.status(201).json("Event created succesfully!!")
+    
+  } catch (error) {
+    res.send(error)
+  }
 }
 }

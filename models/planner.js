@@ -43,4 +43,4 @@ const plannerschema= new Schema(
     }
 )
 
-export default Planner=mongoose.model("Planner",plannerschema)
+export const Planner=mongoose.model("Planner",plannerschema)
