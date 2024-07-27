@@ -63,7 +63,7 @@ export class UserController {
       }
 
       if (!(await bcrypt.compare(password, user.password))) {
-        return res.status(401).json("Wrong Username!!");
+        return res.status(401).json("Wrong Password!!");
       }
       const loggedInUser = await User.findById(user._id).select(
         "-password "

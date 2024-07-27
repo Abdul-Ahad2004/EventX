@@ -25,6 +25,12 @@ const plannerschema= new Schema(
         portfolio:{
             type: String,
         },
+        age:{
+            type:Number,
+        },
+        gender:{
+            type:String
+        },
         experience:{
             type: Number,
             default: 0,

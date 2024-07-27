@@ -21,6 +21,9 @@ const userschema =new Schema(
         required:true,
 
       },
+      gender:{
+        type:String
+      },
       phoneNumber:{
         type:String,
         required:true,
