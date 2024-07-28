@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.js";
 import {Event} from "../models/event.js"
+import { Planner } from "../models/planner.js";
 import bcrypt from "bcrypt";
 
 export class UserController {
@@ -140,6 +141,24 @@ static async postevent (req,res){
     
   } catch (error) {
     res.send(error)
+  }
+}
+
+
+static async postReview(req,res){
+
+  try {
+    const plannerName=req.params.planner;
+    const {feedback,rating}=req.body
+    const planner= await Planner.findOne({username:plannerName})
+    if(!planner){
+      return res.status(400).json("Planner does not exist with this username")
+    }
+   planner.reviews.push({ratings:rating,feedback});
+   await planner.save();
+   return res.status(201).json("Review has been sent to the planner")
+  } catch (error) {
+    console.log("Error:",error)
   }
 }
 }

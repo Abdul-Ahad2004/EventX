@@ -35,15 +35,17 @@ const plannerschema= new Schema(
             type: Number,
             default: 0,
         },
-        ratings:{
-            type:Number,
-            default:0,
-            min:0,
-            max:5,
-        },
         reviews:[
             {
-                type:String,
+                ratings:{
+                    type:Number,
+                    default:0,
+                    min:0,
+                    max:5,
+                },
+                feedback:{
+                    type:String,
+                },
             }
         ],
     }
