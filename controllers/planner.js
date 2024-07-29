@@ -111,5 +111,16 @@ export class PlannerController {
     .json("Planner logged Out")
 }
 
-
+static async getEvents(req,res){
+ try {
+   const events=await Event.find({})
+   if(!events)
+   {
+     return res.status(500).json("Error in fetching events")
+   }
+   return res.status(201).json({events,message:"Events fetched successfully"})
+ } catch (error) {
+  console.log("Error",error)
+ }
+}
 }
