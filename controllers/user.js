@@ -3,6 +3,7 @@ import { User } from "../models/user.js";
 import {Event} from "../models/event.js"
 import { Planner } from "../models/planner.js";
 import bcrypt from "bcrypt";
+import mongoose from "mongoose";
 
 export class UserController {
   static async signup(req, res) {
@@ -160,5 +161,10 @@ static async postReview(req,res){
   } catch (error) {
     console.log("Error:",error)
   }
+}
+static async getPlanners(req,res){
+  const token=req.cookies?.id
+    const userId=jwt.verify(token,'secret').data
+
 }
 }

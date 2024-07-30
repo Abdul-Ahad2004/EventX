@@ -9,5 +9,6 @@ router.post("/login", UserController.login)
 router.post("/logout", UserController.logout)
 router.post("/post-event",AuthMiddleware.userverify,UserController.postevent)
 router.post("/post-review/:planner",AuthMiddleware.userverify,UserController.postReview)
+router.get("/get-planners",AuthMiddleware.userverify,UserController.getPlanners)
 
 export default router;
