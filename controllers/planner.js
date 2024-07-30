@@ -123,4 +123,34 @@ static async getEvents(req,res){
   console.log("Error",error)
  }
 }
+
+static async addRequest(req,res){
+ try {
+   const eventId=req.params.eventId
+ 
+   const token=req.cookies?.plannerId
+   const plannerId=jwt.verify(token,'secret').data
+   if(!plannerId){
+     return res.status(400).json("Planner is not authenticated")
+   }
+   
+   const event=await Event.findById(eventId)
+   if(!event){
+     return res.status(406).json("This event does not exist")
+   }
+
+   if(event.isAssigned){
+    return res.status(406).json("The event has already been assigned to another planner")
+   }
+   
+   event.planners.push(plannerId)
+   await event.save()
+
+   return res.status(201).json("Successfully applied for the event")
+
+ } catch (error) {
+  console.log("Error",error)
+ }
+
+}
 }
