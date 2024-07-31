@@ -167,54 +167,59 @@ export class UserController {
     }
   }
   static async getPlanners(req, res) {
-    const token = req.cookies?.id;
-    const userId = jwt.verify(token, "secret").data;
-    if (!userId) {
-      return res.status(400).json({ message: "User is not authenticated" });
+    try {
+      const token = req.cookies?.id;
+      const userId = jwt.verify(token, "secret").data;
+      if (!userId) {
+        return res.status(400).json({ message: "User is not authenticated" });
+      }
+  
+      const planners = await User.aggregate([
+        {
+          $match: { _id: new mongoose.Types.ObjectId(userId) },
+        },
+        {
+          $lookup: {
+            from: "events",
+            localField: "_id",
+            foreignField: "user",
+            as: "userEvents",
+          },
+        },
+        {
+          $unwind: "$userEvents",
+        },
+        {
+          $lookup: {
+            from: "planners",
+            localField: "userEvents.planners",
+            foreignField: "_id",
+            as: "plannerDetails",
+          },
+        },
+        {
+          $unwind: "$plannerDetails",
+        },
+        {
+          $group: {
+            _id: "$_id",
+            planners: { $addToSet: "$plannerDetails" },
+          },
+        },
+      ]);
+      if (planners.length === 0) {
+        return res.status(406).json("No planners applied to this event");
+      }
+  
+      const plannerdetails = planners[0].planners.map(
+        ({ password, email, ...rest }) => rest
+      );
+  
+      return res.status(201).json(plannerdetails);
+    } catch (error) {
+      console.log("Error: ",error)
+      return res.error(error)
     }
-
-    const planners = await User.aggregate([
-      {
-        $match: { _id: new mongoose.Types.ObjectId(userId) },
-      },
-      {
-        $lookup: {
-          from: "events",
-          localField: "_id",
-          foreignField: "user",
-          as: "userEvents",
-        },
-      },
-      {
-        $unwind: "$userEvents",
-      },
-      {
-        $lookup: {
-          from: "planners",
-          localField: "userEvents.planners",
-          foreignField: "_id",
-          as: "plannerDetails",
-        },
-      },
-      {
-        $unwind: "$plannerDetails",
-      },
-      {
-        $group: {
-          _id: "$_id",
-          planners: { $addToSet: "$plannerDetails" },
-        },
-      },
-    ]);
-    if (planners.length === 0) {
-      return res.status(406).json("No planners applied to this event");
-    }
-
-    const plannerdetails = planners[0].planners.map(
-      ({ password, email, ...rest }) => rest
-    );
-
-    return res.status(201).json(plannerdetails);
   }
 
   static async sendMessage(req, res) {
@@ -248,5 +253,45 @@ export class UserController {
       console.error("Error sending message:", error);
       return res.error(error);
     }
+  }
+
+  static async getEvents(req,res){
+  try {
+      const token = req.cookies?.id;
+      const userId = jwt.verify(token, "secret").data;
+      if (!userId) {
+        return res.status(400).json({ message: "User is not authenticated" });
+      }
+      const events = await User.aggregate([
+        {
+          $match: { _id: new mongoose.Types.ObjectId(userId) },
+        },
+        {
+          $lookup: {
+            from: "events",
+            localField: "_id",
+            foreignField: "user",
+            as: "userEvents",
+          },
+        },
+        {
+          $unwind: "$userEvents",
+        },
+        {
+          $group: {
+            _id: "$_id",
+            events: { $addToSet: "$userEvents" },
+          },
+        },
+      ]);
+      if (events[0].events=== 0) {
+        return res.status(407).json("No events posted by this user");
+      }
+      const eventlist=events[0].events
+      return res.status(201).json({message:"Events fetched successfully",eventlist})
+  } catch (error) {
+    console.log("Error: ",error)
+    return res.status(500).json({error:error})
+  }
   }
 }
