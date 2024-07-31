@@ -9,5 +9,6 @@ router.post("/login", PlannerController.login)
 router.post("/logout", PlannerController.logout)
 router.get("/get-events",AuthMiddleware.plannerverify,PlannerController.getEvents)
 router.post("/add-request/:eventId",AuthMiddleware.plannerverify,PlannerController.addRequest)
+router.post("/send-message",AuthMiddleware.userverify,PlannerController.sendMessage)
 
 export default router;
