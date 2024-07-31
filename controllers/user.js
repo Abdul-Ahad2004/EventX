@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.js";
-import {Event} from "../models/event.js"
+import { Event } from "../models/event.js";
 import { Planner } from "../models/planner.js";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
@@ -59,7 +59,7 @@ export class UserController {
         return res.status(401).json("All fields are required");
       }
 
-      const user = await User.findOne({email});
+      const user = await User.findOne({ email });
       if (!user) {
         return res.status(401).json("User with this email does not exist");
       }
@@ -67,9 +67,7 @@ export class UserController {
       if (!(await bcrypt.compare(password, user.password))) {
         return res.status(401).json("Wrong Password!!");
       }
-      const loggedInUser = await User.findById(user._id).select(
-        "-password "
-      );
+      const loggedInUser = await User.findById(user._id).select("-password ");
 
       const token = jwt.sign(
         {
@@ -77,19 +75,20 @@ export class UserController {
         },
         "secret",
         {
-          expiresIn:(Date.now()+1)
+          expiresIn: Date.now() + 1,
         }
       );
 
-      return res.status(201)
-      .cookie("id", token, {
-        httpOnly: true,
-        secure:true,
-      })
-      .send({
-        message:"User logged in successfully!",
-        body:loggedInUser})
-     
+      return res
+        .status(201)
+        .cookie("id", token, {
+          httpOnly: true,
+          secure: true,
+        })
+        .send({
+          message: "User logged in successfully!",
+          body: loggedInUser,
+        });
     } catch (error) {
       res.status(500).send({
         message: error.message || error,
@@ -97,74 +96,116 @@ export class UserController {
     }
   }
 
-  static async logout (req, res){
-  
+  static async logout(req, res) {
     const options = {
-        httpOnly: true,
-        secure: true
-    }
+      httpOnly: true,
+      secure: true,
+    };
 
-    return res
-    .status(201)
-    .clearCookie("id", options)
-    .json("User logged Out")
-}
-
-static async postevent (req,res){
-  try {
-    const{eventType,location,date,budget,preferences}=req.body
-  
-    const token=req.cookies?.id
-    const userId=jwt.verify(token,'secret').data
-
-  
-    if(eventType==="" || location===""|| date===""|| budget===""||preferences.length===0){
-      return res.status(400).json("All fields are required")
-    }
-  
-    const event =await Event.create({
-      eventType,
-      location,
-      date:Date(date),
-      budget,
-      preferences,
-      user:userId,
-    })
-  
-    const cereatedEvent =await Event.findById(event._id)
-  
-    if(!cereatedEvent)
-    {
-      return res.status(500).json("Event not created")
-    }
-  
-    return res.status(201).json("Event created succesfully!!")
-    
-  } catch (error) {
-    res.send(error)
+    return res.status(201).clearCookie("id", options).json({message:"User logged Out"});
   }
-}
 
+  static async postevent(req, res) {
+    try {
+      const { eventType, location, date, budget, preferences } = req.body;
 
-static async postReview(req,res){
+      const token = req.cookies?.id;
+      const userId = jwt.verify(token, "secret").data;
 
-  try {
-    const plannerName=req.params.planner;
-    const {feedback,rating}=req.body
-    const planner= await Planner.findOne({username:plannerName})
-    if(!planner){
-      return res.status(400).json("Planner does not exist with this username")
+      if (
+        eventType === "" ||
+        location === "" ||
+        date === "" ||
+        budget === "" ||
+        preferences.length === 0
+      ) {
+        return res.status(400).json({message:"All fields are required"});
+      }
+
+      const event = await Event.create({
+        eventType,
+        location,
+        date: Date(date),
+        budget,
+        preferences,
+        user: userId,
+      });
+
+      const cereatedEvent = await Event.findById(event._id);
+
+      if (!cereatedEvent) {
+        return res.status(500).json({message:"Event not created"});
+      }
+
+      return res.status(201).json({message:"Event created succesfully!!"});
+    } catch (error) {
+      res.send(error);
     }
-   planner.reviews.push({ratings:rating,feedback});
-   await planner.save();
-   return res.status(201).json("Review has been sent to the planner")
-  } catch (error) {
-    console.log("Error:",error)
   }
-}
-static async getPlanners(req,res){
-  const token=req.cookies?.id
-    const userId=jwt.verify(token,'secret').data
 
-}
+  static async postReview(req, res) {
+    try {
+      const plannerName = req.params.planner;
+      const { feedback, rating } = req.body;
+      const planner = await Planner.findOne({ username: plannerName });
+      if (!planner) {
+        return res
+          .status(400)
+          .json({message:"Planner does not exist with this username"});
+      }
+      planner.reviews.push({ ratings: rating, feedback });
+      await planner.save();
+      return res.status(201).json({message:"Review has been sent to the planner"});
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  }
+  static async getPlanners(req, res) {
+    const token = req.cookies?.id;
+    const userId = jwt.verify(token, "secret").data;
+    if (!userId) {
+      return res.status(400).json({message:"User is not authenticated"});
+    }
+
+    const planners =  await User.aggregate([
+      {
+        $match: { _id: new mongoose.Types.ObjectId(userId) } 
+      },
+      {
+        $lookup: {
+          from: "events",
+          localField: "_id",
+          foreignField: "user",
+          as: "userEvents"
+        }
+      },
+      {
+        $unwind: "$userEvents" 
+      },
+      {
+        $lookup: {
+          from: "planners",
+          localField: "userEvents.planners",
+          foreignField: "_id",
+          as: "plannerDetails"
+        }
+      },
+      {
+        $unwind: "$plannerDetails" 
+      },
+      {
+        $group: {
+          _id: "$_id",
+          planners: { $addToSet: "$plannerDetails" } 
+        }
+      }
+    ]);
+    if (planners.length === 0) {
+      return res.status(406).json("No planners applied to this event");
+    }
+
+    const plannerdetails = planners[0].planners.map(({ password,email,...rest }) => rest);
+
+    return res.status(201).json(plannerdetails);
+  }
 }

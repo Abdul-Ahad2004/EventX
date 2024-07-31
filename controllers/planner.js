@@ -108,7 +108,7 @@ export class PlannerController {
     return res
     .status(201)
     .clearCookie("plannerId", options)
-    .json("Planner logged Out")
+    .json({message:"Planner logged Out"})
 }
 
 static async getEvents(req,res){
@@ -131,22 +131,22 @@ static async addRequest(req,res){
    const token=req.cookies?.plannerId
    const plannerId=jwt.verify(token,'secret').data
    if(!plannerId){
-     return res.status(400).json("Planner is not authenticated")
+     return res.status(400).json({message:"Planner is not authenticated"})
    }
    
    const event=await Event.findById(eventId)
    if(!event){
-     return res.status(406).json("This event does not exist")
+     return res.status(406).json({message:"This event does not exist"})
    }
 
    if(event.isAssigned){
-    return res.status(406).json("The event has already been assigned to another planner")
+    return res.status(406).json({message:"The event has already been assigned to another planner"})
    }
    
    event.planners.push(plannerId)
    await event.save()
 
-   return res.status(201).json("Successfully applied for the event")
+   return res.status(201).json({message:"Successfully applied for the event"})
 
  } catch (error) {
   console.log("Error",error)
