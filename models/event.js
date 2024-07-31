@@ -44,7 +44,8 @@ const eventschema= new Schema(
         },
         assignedPlanner:{
             type:Schema.Types.ObjectId,
-            ref: "Planner"
+            ref: "Planner",
+            default:null,
         }
     }
 )
