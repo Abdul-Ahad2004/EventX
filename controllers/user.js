@@ -102,7 +102,7 @@ export class UserController {
       secure: true,
     };
 
-    return res.status(201).clearCookie("id", options).json("User logged Out");
+    return res.status(201).clearCookie("id", options).json({message:"User logged Out"});
   }
 
   static async postevent(req, res) {
@@ -119,7 +119,7 @@ export class UserController {
         budget === "" ||
         preferences.length === 0
       ) {
-        return res.status(400).json("All fields are required");
+        return res.status(400).json({message:"All fields are required"});
       }
 
       const event = await Event.create({
@@ -134,10 +134,10 @@ export class UserController {
       const cereatedEvent = await Event.findById(event._id);
 
       if (!cereatedEvent) {
-        return res.status(500).json("Event not created");
+        return res.status(500).json({message:"Event not created"});
       }
 
-      return res.status(201).json("Event created succesfully!!");
+      return res.status(201).json({message:"Event created succesfully!!"});
     } catch (error) {
       res.send(error);
     }
@@ -151,11 +151,11 @@ export class UserController {
       if (!planner) {
         return res
           .status(400)
-          .json("Planner does not exist with this username");
+          .json({message:"Planner does not exist with this username"});
       }
       planner.reviews.push({ ratings: rating, feedback });
       await planner.save();
-      return res.status(201).json("Review has been sent to the planner");
+      return res.status(201).json({message:"Review has been sent to the planner"});
     } catch (error) {
       console.log("Error:", error);
     }
@@ -164,7 +164,7 @@ export class UserController {
     const token = req.cookies?.id;
     const userId = jwt.verify(token, "secret").data;
     if (!userId) {
-      return res.status(400).json("User is not authenticated");
+      return res.status(400).json({message:"User is not authenticated"});
     }
 
     const planners =  await User.aggregate([
