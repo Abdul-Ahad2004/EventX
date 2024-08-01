@@ -9,10 +9,11 @@ import mongoose from "mongoose";
 export class UserController {
   static async signup(req, res) {
     try {
-      const { username, email, password, age, phoneNumber } = req.body;
+     
+      const { username, email, password, age, phoneNumber ,gender} = req.body;
 
       if (
-        [age, email, username, password, phoneNumber].some(
+        [age, email, username, password,gender, phoneNumber].some(
           (field) => field === ""
         )
       ) {
@@ -27,16 +28,17 @@ export class UserController {
         return res.status(400).json("User with same email or username exists");
       }
       const hashedPassword = await bcrypt.hash(password, 10);
-
+      
       const user = await User.create({
         username,
         email,
         password: hashedPassword,
         age,
         phoneNumber,
+        gender,
       });
-
       const createdUser = await User.findById(user._id).select("-password");
+      
       if (!createdUser) {
         return res.status(500).json("Error!! User not created");
       }

@@ -27,7 +27,6 @@ const userschema =new Schema(
       phoneNumber:{
         type:String,
         required:true,
-        unique:true,
       }
     }
 )
