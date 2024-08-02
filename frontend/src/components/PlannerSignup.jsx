@@ -5,12 +5,14 @@ import "react-toastify/dist/ReactToastify.css";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 
-function UserSignup() {
+function PlannerSignup() {
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [age, setage] = useState(0);
   const [phoneNumber, setphoneNumber] = useState("");
+  const [portfolio, setportfolio] = useState("");
+  const [experience, setexperience] = useState();
   const [gender, setgender] = useState("Male");
   const [isShowing, setisShowing] = useState(false);
   const [issubmitting, setissubmitting] = useState(false);
@@ -24,7 +26,9 @@ function UserSignup() {
         password === "" ||
         age === 0 ||
         phoneNumber === "" ||
-        gender === ""
+        gender === ""||
+        experience===""||
+        portfolio===""
       ) {
         toast.error("All fields are required!");
         setissubmitting(false);
@@ -41,19 +45,23 @@ function UserSignup() {
         return;
       }
 
-      await axios.post("http://localhost:5000/user/signup", {
+      await axios.post("http://localhost:5000/planner/signup", {
         username: name,
         email,
         password,
         age,
         phoneNumber,
         gender,
+        experience: Number(experience),
+        portfolio
       });
       setname("");
       setemail("");
       setage(0);
       setpassword("");
       setphoneNumber("");
+      setportfolio("")
+      setexperience("")
       setgender("Male");
       toast.success("Sign Up successfully");
       setissubmitting(false);
@@ -66,7 +74,7 @@ function UserSignup() {
   return (
     <div className="flex flex-col justify-center items-center gap-5 min-h-screen">
       <ToastContainer />
-      <h1 className="text-2xl text-blue-600 font-bold">Sign Up Page</h1>
+      <h1 className="text-2xl text-blue-600 font-bold">Planner Sign Up Page</h1>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col  gap-3">
           <div className="flex items-center gap-1 w-full">
@@ -106,6 +114,24 @@ function UserSignup() {
                 {isShowing ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
+          </div>
+          <div className="flex  items-center gap-1">
+            <label>Portfolio Link:</label>
+            <input
+              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              type="text"
+              value={portfolio}
+              onChange={(e) => setportfolio(e.target.value)}
+            />
+          </div>
+          <div className="flex  items-center gap-1">
+            <label>Experience:</label>
+            <input
+              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              type="text"
+              value={experience}
+              onChange={(e) => setexperience(e.target.value)}
+            />
           </div>
           <div className="flex items-center gap-1">
             <label>Age:</label>
@@ -163,11 +189,11 @@ function UserSignup() {
           className={`${issubmitting?'disabled':null} p-1 m-7 w-40 border border-gray-300 rounded-lg bg-blue-600 text-white`}
           onClick={() => setissubmitting(true)}
         >
-            Sign Up
+          Sign Up
         </button>
       </form>
     </div>
   );
 }
 
-export default UserSignup;
+export default PlannerSignup;
