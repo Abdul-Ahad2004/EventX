@@ -2,16 +2,18 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/user.js";
 import { Event } from "../models/event.js";
 import { Planner } from "../models/planner.js";
+import { Message } from "../models/message.js";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 
 export class UserController {
   static async signup(req, res) {
     try {
-      const { username, email, password, age, phoneNumber } = req.body;
+     
+      const { username, email, password, age, phoneNumber ,gender} = req.body;
 
       if (
-        [age, email, username, password, phoneNumber].some(
+        [age, email, username, password,gender, phoneNumber].some(
           (field) => field === ""
         )
       ) {
@@ -26,16 +28,17 @@ export class UserController {
         return res.status(400).json("User with same email or username exists");
       }
       const hashedPassword = await bcrypt.hash(password, 10);
-
+      
       const user = await User.create({
         username,
         email,
         password: hashedPassword,
         age,
         phoneNumber,
+        gender,
       });
-
       const createdUser = await User.findById(user._id).select("-password");
+      
       if (!createdUser) {
         return res.status(500).json("Error!! User not created");
       }
@@ -102,7 +105,10 @@ export class UserController {
       secure: true,
     };
 
-    return res.status(201).clearCookie("id", options).json({message:"User logged Out"});
+    return res
+      .status(201)
+      .clearCookie("id", options)
+      .json({ message: "User logged Out" });
   }
 
   static async postevent(req, res) {
@@ -119,7 +125,7 @@ export class UserController {
         budget === "" ||
         preferences.length === 0
       ) {
-        return res.status(400).json({message:"All fields are required"});
+        return res.status(400).json({ message: "All fields are required" });
       }
 
       const event = await Event.create({
@@ -134,10 +140,10 @@ export class UserController {
       const cereatedEvent = await Event.findById(event._id);
 
       if (!cereatedEvent) {
-        return res.status(500).json({message:"Event not created"});
+        return res.status(500).json({ message: "Event not created" });
       }
 
-      return res.status(201).json({message:"Event created succesfully!!"});
+      return res.status(201).json({ message: "Event created succesfully!!" });
     } catch (error) {
       res.send(error);
     }
@@ -151,61 +157,143 @@ export class UserController {
       if (!planner) {
         return res
           .status(400)
-          .json({message:"Planner does not exist with this username"});
+          .json({ message: "Planner does not exist with this username" });
       }
       planner.reviews.push({ ratings: rating, feedback });
       await planner.save();
-      return res.status(201).json({message:"Review has been sent to the planner"});
+      return res
+        .status(201)
+        .json({ message: "Review has been sent to the planner" });
     } catch (error) {
       console.log("Error:", error);
     }
   }
   static async getPlanners(req, res) {
-    const token = req.cookies?.id;
-    const userId = jwt.verify(token, "secret").data;
-    if (!userId) {
-      return res.status(400).json({message:"User is not authenticated"});
-    }
-
-    const planners =  await User.aggregate([
-      {
-        $match: { _id: new mongoose.Types.ObjectId(userId) } 
-      },
-      {
-        $lookup: {
-          from: "events",
-          localField: "_id",
-          foreignField: "user",
-          as: "userEvents"
-        }
-      },
-      {
-        $unwind: "$userEvents" 
-      },
-      {
-        $lookup: {
-          from: "planners",
-          localField: "userEvents.planners",
-          foreignField: "_id",
-          as: "plannerDetails"
-        }
-      },
-      {
-        $unwind: "$plannerDetails" 
-      },
-      {
-        $group: {
-          _id: "$_id",
-          planners: { $addToSet: "$plannerDetails" } 
-        }
+    try {
+      const token = req.cookies?.id;
+      const userId = jwt.verify(token, "secret").data;
+      if (!userId) {
+        return res.status(400).json({ message: "User is not authenticated" });
       }
-    ]);
-    if (planners.length === 0) {
-      return res.status(406).json("No planners applied to this event");
+  
+      const planners = await User.aggregate([
+        {
+          $match: { _id: new mongoose.Types.ObjectId(userId) },
+        },
+        {
+          $lookup: {
+            from: "events",
+            localField: "_id",
+            foreignField: "user",
+            as: "userEvents",
+          },
+        },
+        {
+          $unwind: "$userEvents",
+        },
+        {
+          $lookup: {
+            from: "planners",
+            localField: "userEvents.planners",
+            foreignField: "_id",
+            as: "plannerDetails",
+          },
+        },
+        {
+          $unwind: "$plannerDetails",
+        },
+        {
+          $group: {
+            _id: "$_id",
+            planners: { $addToSet: "$plannerDetails" },
+          },
+        },
+      ]);
+      if (planners.length === 0) {
+        return res.status(406).json("No planners applied to this event");
+      }
+  
+      const plannerdetails = planners[0].planners.map(
+        ({ password, email, ...rest }) => rest
+      );
+  
+      return res.status(201).json(plannerdetails);
+    } catch (error) {
+      console.log("Error: ",error)
+      return res.error(error)
     }
+  }
 
-    const plannerdetails = planners[0].planners.map(({ password,email,...rest }) => rest);
+  static async sendMessage(req, res) {
+    const { senderId, receiverId, receiverModel, content } = req.body;
+    try {
+      const sender = await User.findById(senderId);
+      if (!sender) {
+        throw new Error("Sender not found");
+      }
 
-    return res.status(201).json(plannerdetails);
+      let receiver;
+      if (receiverModel === "User") {
+        receiver = await User.findById(receiverId);
+      } else if (receiverModel === "Planner") {
+        receiver = await Planner.findById(receiverId);
+      } else {
+        throw new Error("Invalid receiver model");
+      }
+
+      if (!receiver) throw new Error("Receiver not found");
+
+      const message = new Message({
+        sender: { id: senderId, model: "User" },
+        receiver: { id: receiverId, model: receiverModel },
+        content,
+      });
+
+      await message.save();
+      return res.status(201).json({ message: "Message sent successfully" });
+    } catch (error) {
+      console.error("Error sending message:", error);
+      return res.error(error);
+    }
+  }
+
+  static async getEvents(req,res){
+  try {
+      const token = req.cookies?.id;
+      const userId = jwt.verify(token, "secret").data;
+      if (!userId) {
+        return res.status(400).json({ message: "User is not authenticated" });
+      }
+      const events = await User.aggregate([
+        {
+          $match: { _id: new mongoose.Types.ObjectId(userId) },
+        },
+        {
+          $lookup: {
+            from: "events",
+            localField: "_id",
+            foreignField: "user",
+            as: "userEvents",
+          },
+        },
+        {
+          $unwind: "$userEvents",
+        },
+        {
+          $group: {
+            _id: "$_id",
+            events: { $addToSet: "$userEvents" },
+          },
+        },
+      ]);
+      if (events[0].events=== 0) {
+        return res.status(407).json("No events posted by this user");
+      }
+      const eventlist=events[0].events
+      return res.status(201).json({message:"Events fetched successfully",eventlist})
+  } catch (error) {
+    console.log("Error: ",error)
+    return res.status(500).json({error:error})
+  }
   }
 }
