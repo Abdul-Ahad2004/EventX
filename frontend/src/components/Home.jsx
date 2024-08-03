@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 function Home() {
   const [events, setevents] = useState([]);
 async function getApplicantsNumber(eventId){
 try {
-    const number= await axios.get(`http://localhost:5000/user//numberOfApplicants/${eventId}`)
+    const number= await axios.get(`http://localhost:5000/user/numberOfApplicants/${eventId}`)
     return number
 } catch (error) {
     console.log("Error", error?.response.data || error.message);
@@ -18,7 +18,7 @@ try {
       );
       setevents(eventList);
     } catch (error) {
-      console.log("Error", error?.response.data || error.message);
+      console.log("Error", error);
     }
   }
   useEffect(() => {

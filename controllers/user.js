@@ -86,7 +86,6 @@ export class UserController {
         .status(201)
         .cookie("id", token, {
           httpOnly: true,
-          secure: true,
         })
         .send({
           message: "User logged in successfully!",
@@ -101,8 +100,8 @@ export class UserController {
 
   static async logout(req, res) {
     const options = {
-      httpOnly: true,
       secure: true,
+      samesite:'none'
     };
 
     return res
@@ -259,6 +258,7 @@ export class UserController {
 
   static async getEvents(req,res){
   try {
+    console.log("Reached")
       const token = req.cookies?.id;
       const userId = jwt.verify(token, "secret").data;
       if (!userId) {
@@ -297,8 +297,9 @@ export class UserController {
   }
   }
 
-  static async numberOfApplicants(req,res){
+  static async getnumberOfApplicants(req,res){
     try {
+      console.log("Reached")
       const token = req.cookies?.id;
       const {eventId}=req.params
       const userId = jwt.verify(token, "secret").data;

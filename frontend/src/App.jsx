@@ -1,24 +1,51 @@
 import React from 'react'
 import UserSignup from './components/UserSignup'
-<<<<<<< HEAD
 import Navbar from './components/Navbar'
 import Home from './components/Home'
-=======
 import PlannerSignup from './components/PlannerSignup'
 import Login from './components/Login'
->>>>>>> origin/main
+import {
+  createBrowserRouter,
+  Outlet,
+  RouterProvider,
+} from "react-router-dom";
 
 function App() {
 
+  const Layout = () => {
+    return (
+      <div>
+        <Navbar />
+        <div >
+            <Outlet />
+        </div>
+      </div>    
+    )
+  }
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Layout />,
+      children: [{
+        path: "/",
+        element: <Home />,
+      },
+      ]
+    },
+    {
+      path: "/Login",
+      element: <Login />,
+    },
+    {
+      path: "/Signup",
+      element: <UserSignup />,
+    },
+  ]);
+ 
   return (
     <>
-<<<<<<< HEAD
-      {/* <UserSignup/> */}
-      <Navbar/>
-      <Home/>
-=======
-      <Login/>
->>>>>>> origin/main
+      <RouterProvider router={router} />
     </>
   )
 }

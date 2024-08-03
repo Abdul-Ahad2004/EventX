@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [name, setname] = useState("");
@@ -11,6 +12,8 @@ function Login() {
   const [isShowing, setisShowing] = useState(false);
   const [issubmitting, setissubmitting] = useState(false);
   const [user, setuser] = useState("Client");
+
+  const Navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     try {
@@ -22,10 +25,13 @@ function Login() {
       }
 
       if (user === "Client") {
-        await axios.post("http://localhost:5000/user/login", {
-          username: name,
-          password,
-        });
+        await axios.post(
+          "http://localhost:5000/user/login",
+          {
+            username: name,
+            password,
+          }
+        );
       } else {
         await axios.post("http://localhost:5000/planner/login", {
           username: name,
@@ -36,6 +42,7 @@ function Login() {
       setpassword("");
       setuser("Client");
       toast.success("Login successfully");
+      Navigate("/");
       setissubmitting(false);
     } catch (error) {
       toast.error(error.response?.data || error.message);
