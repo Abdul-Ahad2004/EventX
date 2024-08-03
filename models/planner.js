@@ -20,7 +20,6 @@ const plannerschema= new Schema(
         phoneNumber:{
             type: String,
             required:true,
-            unique:true,
         },
         portfolio:{
             type: String,

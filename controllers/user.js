@@ -56,15 +56,15 @@ export class UserController {
 
   static async login(req, res) {
     try {
-      const { email, password } = req.body;
+      const { username, password } = req.body;
 
-      if (email === "" || password === "") {
+      if (username === "" || password === "") {
         return res.status(401).json("All fields are required");
       }
 
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ username });
       if (!user) {
-        return res.status(401).json("User with this email does not exist");
+        return res.status(401).json("User with this username does not exist");
       }
 
       if (!(await bcrypt.compare(password, user.password))) {

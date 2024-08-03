@@ -44,7 +44,7 @@ export class PlannerController {
           .json("Planner with same email or username exists");
       }
       const hashedPassword = await bcrypt.hash(password, 10);
-
+       
       const user = await Planner.create({
         username,
         email,
@@ -55,7 +55,6 @@ export class PlannerController {
         portfolio,
         experience,
       });
-
       const createdUser = await Planner.findById(user._id).select("-password");
       if (!createdUser) {
         return res.status(500).json("Error!! Planner not created");
@@ -74,15 +73,15 @@ export class PlannerController {
 
   static async login(req, res) {
     try {
-      const { email, password } = req.body;
+      const { username, password } = req.body;
 
-      if (email === "" || password === "") {
+      if (username === "" || password === "") {
         return res.status(401).json("All fields are required");
       }
 
-      const user = await Planner.findOne({ email });
+      const user = await Planner.findOne({ username });
       if (!user) {
-        return res.status(401).json("Planner with this email does not exist");
+        return res.status(401).json("Planner with this username does not exist");
       }
 
       if (!(await bcrypt.compare(password, user.password))) {
