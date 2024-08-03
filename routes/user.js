@@ -12,5 +12,6 @@ router.post("/post-review/:planner",AuthMiddleware.userverify,UserController.pos
 router.get("/get-planners",AuthMiddleware.userverify,UserController.getPlanners)
 router.post("/send-message",AuthMiddleware.userverify,UserController.sendMessage)
 router.get("/get-events",AuthMiddleware.userverify,UserController.getEvents)
+router.get("/numberOfApplicants/:eventId",AuthMiddleware.userverify,UserController.getnumberOfApplicants)
 
 export default router;

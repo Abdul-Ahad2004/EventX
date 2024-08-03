@@ -296,4 +296,23 @@ export class UserController {
     return res.status(500).json({error:error})
   }
   }
+
+  static async numberOfApplicants(req,res){
+    try {
+      const token = req.cookies?.id;
+      const {eventId}=req.params
+      const userId = jwt.verify(token, "secret").data;
+      if (!userId) {
+        return res.status(400).json({ message: "User is not authenticated" });
+      }
+      const event= await Event.findById(eventId)
+      if(!event){
+        return res.status(404).json({message:"Event does not exist"})
+      }
+      const number=event.planners.length
+      return res.status(201).send(number)
+    } catch (error) {
+      console.log("Error",error)
+    }
+  }
 }
