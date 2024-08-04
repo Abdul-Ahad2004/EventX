@@ -76,16 +76,19 @@ function Home() {
                   <div>
                     <div>Event date: {getdate(event.date)}</div>
                     <div>Event Location: {event.location}</div>
-                    {!event.isAssigned && (
+                    {!event.isAssigned ? (
                       <>
                         <div>
                           Number of Applicants: {applicantNumbers[event._id]}
                         </div>
                         <button>View Applicants</button>
                       </>
+                    ) : (
+                      <>
+                        <div>Having an assigned Planner</div>
+                        <button>Manage Event Tasks</button>
+                      </>
                     )}
-                    <div>Having an assigned Planner</div>
-                    <button>Manage Event Tasks</button>
                   </div>
                 </div>
               ))}
