@@ -78,7 +78,7 @@ export class UserController {
         },
         "secret",
         {
-          expiresIn: Date.now() + 1,
+          expiresIn: '1h',
         }
       );
 
@@ -258,7 +258,6 @@ export class UserController {
 
   static async getEvents(req,res){
   try {
-    console.log("Reached")
       const token = req.cookies?.id;
       const userId = jwt.verify(token, "secret").data;
       if (!userId) {
@@ -299,7 +298,6 @@ export class UserController {
 
   static async getnumberOfApplicants(req,res){
     try {
-      console.log("Reached")
       const token = req.cookies?.id;
       const {eventId}=req.params
       const userId = jwt.verify(token, "secret").data;
@@ -311,7 +309,8 @@ export class UserController {
         return res.status(404).json({message:"Event does not exist"})
       }
       const number=event.planners.length
-      return res.status(201).send(number)
+     
+      return res.status(201).json({number})
     } catch (error) {
       console.log("Error",error)
     }

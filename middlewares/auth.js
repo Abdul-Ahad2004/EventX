@@ -5,7 +5,7 @@ export class AuthMiddleware {
   static async userverify(req, res, next) {
     try {
       const token = req.cookies.id
-      console.log(token)
+      
       if(!token)
       {
         return res.status(400).json("User not authenticated");
