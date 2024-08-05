@@ -169,31 +169,21 @@ export class UserController {
   }
   static async getPlanners(req, res) {
     try {
+        const {eventId}=req.params
       const token = req.cookies?.id;
       const userId = jwt.verify(token, "secret").data;
       if (!userId) {
         return res.status(400).json({ message: "User is not authenticated" });
       }
   
-      const planners = await User.aggregate([
+      const planners = await Event.aggregate([
         {
-          $match: { _id: new mongoose.Types.ObjectId(userId) },
-        },
-        {
-          $lookup: {
-            from: "events",
-            localField: "_id",
-            foreignField: "user",
-            as: "userEvents",
-          },
-        },
-        {
-          $unwind: "$userEvents",
+          $match: { _id: new mongoose.Types.ObjectId(eventId) },
         },
         {
           $lookup: {
             from: "planners",
-            localField: "userEvents.planners",
+            localField: "planners",
             foreignField: "_id",
             as: "plannerDetails",
           },
@@ -208,9 +198,6 @@ export class UserController {
           },
         },
       ]);
-      if (planners.length === 0) {
-        return res.status(406).json("No planners applied to this event");
-      }
   
       const plannerdetails = planners[0].planners.map(
         ({ password, email, ...rest }) => rest
@@ -219,7 +206,7 @@ export class UserController {
       return res.status(201).json(plannerdetails);
     } catch (error) {
       console.log("Error: ",error)
-      return res.error(error)
+      return res.send(error)
     }
   }
 
