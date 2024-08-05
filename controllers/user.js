@@ -78,7 +78,7 @@ export class UserController {
         },
         "secret",
         {
-          expiresIn: Date.now() + 1,
+          expiresIn: '1h',
         }
       );
 
@@ -86,7 +86,6 @@ export class UserController {
         .status(201)
         .cookie("id", token, {
           httpOnly: true,
-          secure: true,
         })
         .send({
           message: "User logged in successfully!",
@@ -101,8 +100,8 @@ export class UserController {
 
   static async logout(req, res) {
     const options = {
-      httpOnly: true,
       secure: true,
+      samesite:'none'
     };
 
     return res
@@ -295,5 +294,25 @@ export class UserController {
     console.log("Error: ",error)
     return res.status(500).json({error:error})
   }
+  }
+
+  static async getnumberOfApplicants(req,res){
+    try {
+      const token = req.cookies?.id;
+      const {eventId}=req.params
+      const userId = jwt.verify(token, "secret").data;
+      if (!userId) {
+        return res.status(400).json({ message: "User is not authenticated" });
+      }
+      const event= await Event.findById(eventId)
+      if(!event){
+        return res.status(404).json({message:"Event does not exist"})
+      }
+      const number=event.planners.length
+     
+      return res.status(201).json({number})
+    } catch (error) {
+      console.log("Error",error)
+    }
   }
 }
