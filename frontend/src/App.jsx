@@ -9,6 +9,7 @@ import {
   Outlet,
   RouterProvider,
 } from "react-router-dom";
+import PostEvent from './components/PostEvent'
 
 function App() {
 
@@ -33,8 +34,16 @@ function App() {
       element: <Login />,
     },
     {
-      path: "/Signup",
+      path: "/UserSignup",
       element: <UserSignup />,
+    },
+    {
+      path: "/PlannerSignup",
+      element: <PlannerSignup />,
+    },
+    {
+      path: "/PostEvent",
+      element: <PostEvent />,
     },
   ]);
  
