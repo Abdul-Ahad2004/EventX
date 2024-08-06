@@ -10,7 +10,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import PostEvent from './components/PostEvent'
-import PlannersView from './components/PlannersView'
+import Applications from './components/Applications'
 
 function App() {
 
@@ -47,8 +47,8 @@ function App() {
       element: <PostEvent />,
     },
     {
-      path: "/PlannersView",
-      element: <PlannersView />,
+      path: "/Applications",
+      element: <Applications />,
     },
   ]);
  

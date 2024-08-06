@@ -302,4 +302,23 @@ export class UserController {
       console.log("Error",error)
     }
   }
+
+  static async setPlanner(req,res){
+    try {
+      const token = req.cookies?.id;
+      const {eventId,plannerId}=req.params
+      const userId = jwt.verify(token, "secret").data;
+      if (!userId) {
+        return res.status(400).json({ message: "User is not authenticated" });
+      }
+     const event=await Event.findById(eventId)
+     event.isAssigned=true;
+     event.assignedPlanner=plannerId
+     await event.save();
+     return res.status(200).json({message:"Planner has been Assigned to this event"})
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }

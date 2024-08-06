@@ -1,7 +1,8 @@
 import React, { useState,useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function Applications() {
   const location = useLocation();
@@ -9,7 +10,7 @@ function Applications() {
 
   const [planners, setplanners] = useState([]);
   const [review, setreview] = useState("");
-
+const Navigate=useNavigate()
   async function getplanners() {
     try {
       const response = await axios.get(
@@ -20,10 +21,23 @@ function Applications() {
       );
       setplanners(response.data);
     } catch (error) {
-      console.log("Error", error);
+      console.log("Error1", error);
     }
   }
-
+async function assignPlanner(plannerId){
+  try {
+    const response = await axios.post(
+      `http://localhost:5000/user/set-planner/${eventId}/${plannerId}`,{},
+      {
+        withCredentials: true,
+      }
+    );
+    toast.success("Planner has been assigned to this planner")
+    Navigate('/Home')
+  } catch (error) {
+    console.log("Error2", error);
+  }
+}
   useEffect(() => {
     try {
       getplanners();
@@ -104,7 +118,7 @@ function Applications() {
                   </button>
                   <button
                     className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                    onClick={() => {}}
+                    onClick={() => {assignPlanner(planner._id)}}
                   >
                     Select
                   </button>
