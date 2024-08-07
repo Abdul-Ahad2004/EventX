@@ -150,9 +150,9 @@ export class UserController {
 
   static async postReview(req, res) {
     try {
-      const plannerName = req.params.planner;
+      const {plannerId} = req.params;
       const { feedback, rating } = req.body;
-      const planner = await Planner.findOne({ username: plannerName });
+      const planner = await Planner.findById(plannerId);
       if (!planner) {
         return res
           .status(400)
