@@ -96,7 +96,7 @@ function Home() {
   return (
     <>
      <ToastContainer />
-      <Navbar />
+      <Navbar isClient={true} />
       <div className="flex flex-col justify-center gap-6">
         <div className="flex justify-center items-center m-4">
           <button

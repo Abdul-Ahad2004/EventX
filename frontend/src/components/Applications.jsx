@@ -48,7 +48,7 @@ async function assignPlanner(plannerId){
 
   return (
     <>
-      <Navbar />
+      <Navbar isClient={true} />
       <div>
         <h1 className="mb-2 m-2 text-2xl font-bold tracking-tight text-center text-gray-900 dark:text-white">
           Applicants Profile for Event
