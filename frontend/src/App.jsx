@@ -10,6 +10,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import PostEvent from './components/PostEvent'
+import Applications from './components/Applications'
 
 function App() {
 
@@ -44,6 +45,10 @@ function App() {
     {
       path: "/PostEvent",
       element: <PostEvent />,
+    },
+    {
+      path: "/Applications",
+      element: <Applications />,
     },
   ]);
  
