@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import PostEvent from './components/PostEvent'
 import Applications from './components/Applications'
+import ManageTasks from './components/ManageTasks'
 
 function App() {
 
@@ -49,6 +50,10 @@ function App() {
     {
       path: "/Applications",
       element: <Applications />,
+    },
+    {
+      path: "/ManageTasks",
+      element: <ManageTasks />,
     },
   ]);
  

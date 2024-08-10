@@ -19,7 +19,12 @@ const eventschema= new Schema(
         },
         tasks:[
             {
-                type:String,
+                task:{
+                    type:String,
+                },
+                isdone:{
+                    type:Boolean,
+                },
             }
         ],
         user:{
