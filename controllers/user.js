@@ -86,6 +86,7 @@ export class UserController {
         .status(201)
         .cookie("id", token, {
           httpOnly: true,
+          secure:false,
         })
         .send({
           message: "User logged in successfully!",
@@ -100,8 +101,7 @@ export class UserController {
 
   static async logout(req, res) {
     const options = {
-      secure: true,
-      samesite:'none'
+      httpOnly: true,
     };
 
     return res
@@ -319,6 +319,23 @@ export class UserController {
 
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  static async getId(req, res) {
+    try {
+      const token = req.cookies?.id;
+      const userId = jwt.verify(token, "secret").data;
+      if (!userId) {
+        return res
+          .status(400)
+          .json({ message: "User is not authenticated" });
+      }
+      return res
+        .status(201)
+        .json({ userId, message: "User Id sent successfully" });
+    } catch (error) {
+      console.log("Error", error);
     }
   }
 

@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 function Applications() {
   const location = useLocation();
   const { eventId } = location.state;
+  const [Id, setId] = useState()
 
   const [planners, setplanners] = useState([]);
   const [review, setreview] = useState("");
@@ -24,9 +25,22 @@ const Navigate=useNavigate()
       console.log("Error1", error);
     }
   }
+  async function getId() {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/user/get-id",
+        {
+          withCredentials: true,
+        }
+      );
+      setId(response.data.userId);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  }
 async function assignPlanner(plannerId){
   try {
-    const response = await axios.post(
+     await axios.post(
       `http://localhost:5000/user/set-planner/${eventId}/${plannerId}`,{},
       {
         withCredentials: true,
@@ -41,6 +55,7 @@ async function assignPlanner(plannerId){
   useEffect(() => {
     try {
       getplanners();
+      getId()
     } catch (error) {
       console.log(error);
     }
@@ -72,7 +87,7 @@ async function assignPlanner(plannerId){
                     Phone Number: {planner.phoneNumber}
                   </div>
                   <div className="mb-3 font-normal text-gray-700">
-                    Portfolio: <a href="http://">{planner.portfolio}</a>
+                    Portfolio: <a href="http://" target="_blank">{planner.portfolio}</a>
                   </div>
                   <div className="mb-3 font-normal text-gray-700">
                     Age: {planner.age}
@@ -84,22 +99,25 @@ async function assignPlanner(plannerId){
                     Experience: {planner.experience} years
                   </div>
                   {review === planner._id
-                    ?
-                    planner.reviews.length===0?
+                    ?<>
+                      <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">Reviews</h3>
+                    {planner.reviews.length===0?
                     <div>
                       No reviews for this Planner
                     </div>
-                    : planner.reviews.map((review) => (
+                    : planner.reviews.map((review,index) => (
                         <>
+                        <div key={index} className="h-0.5 bg-gray-700 gray"></div>
                           <div className="mb-3 font-normal text-gray-700">
-                            Rating: {review.ratings}
+                          <span className="font-bold"> Rating: </span>{review.ratings}
                           </div>
                           <div className="mb-3 font-normal text-gray-700">
-                            Feedback: {review.feedback}
+                            <span className="font-bold"> Feedback: </span> {review.feedback}
                           </div>
+                          
                         </>
                       ))
-                    : null}
+                    }</>: null}
                     <div className="flex gap-2">
                   <button
                     className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
@@ -112,7 +130,16 @@ async function assignPlanner(plannerId){
                   </button>
                   <button
                     className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                    onClick={() => {}}
+                    onClick={() => {
+                      Navigate("/Messages", {
+                        state: {
+                          senderId: Id,
+                          senderModel: "User",
+                          receiverId: planner._id,
+                          receiverModel: "Planner",
+                        },
+                      });
+                    }}
                   >
                     Chat
                   </button>

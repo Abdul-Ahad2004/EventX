@@ -10,7 +10,7 @@ import axios from "axios";
 
 function ManageTasks() {
   const location = useLocation();
-  const { eventId } = location.state;
+  const { eventId,isClient } = location.state;
   const [tasks, settasks] = useState([]);
   const [Task, setTask] = useState("");
   const [view, setview] = useState("all");
@@ -108,7 +108,7 @@ function ManageTasks() {
   return (
     <>
       <header>
-        <Navbar />
+        <Navbar isClient={isClient}/>
       </header>
       <main className=" w-[60%] ml-[20%] ">
         <div className=" flex sm:flex-row  items-center flex-col sm:gap-2 gap-1 sm:m-3 m-1">
@@ -119,7 +119,7 @@ function ManageTasks() {
                 AddTask();
               }
             }}
-            className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
             value={Task}
             name="input "
             type="text"
@@ -138,19 +138,19 @@ function ManageTasks() {
         </h1>
         <div className="buttons flex gap-3 ml-6">
           <button
-            className="hover:text-blue-600 active:text-blue-600"
+            className="hover:text-blue-600 hover:cursor-pointer active:text-blue-600"
             onClick={() => setview("all")}
           >
             All
           </button>
           <button
-            className="hover:text-blue-600 "
+            className="hover:text-blue-600 hover:cursor-pointer "
             onClick={() => setview("pending")}
           >
             Pending
           </button>
           <button
-            className="hover:text-blue-600"
+            className="hover:text-blue-600 hover:cursor-pointer"
             onClick={() => setview("completed")}
           >
             Completed

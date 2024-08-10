@@ -173,7 +173,7 @@ export class PlannerController {
       }
       return res
         .status(201)
-        .json({ plannerId, message: "Events fetched successfully" });
+        .json({ plannerId, message: "Planners Id sent successfully" });
     } catch (error) {
       console.log("Error", error);
     }

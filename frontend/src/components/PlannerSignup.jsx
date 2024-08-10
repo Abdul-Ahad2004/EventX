@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function PlannerSignup() {
   const [name, setname] = useState("");
@@ -72,15 +73,15 @@ function PlannerSignup() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-5 min-h-screen">
+    <div className="flex flex-col justify-center items-center  gap-5 min-h-screen">
       <ToastContainer />
       <h1 className="text-2xl text-blue-600 font-bold">Planner Sign Up Page</h1>
       <form onSubmit={handleSubmit}>
-        <div className="flex flex-col  gap-3">
+        <div className="flex flex-col   gap-3 ">
           <div className="flex items-center gap-1 w-full">
             <label>Username:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="text"
               value={name}
               placeholder="Enter your name here"
@@ -90,7 +91,7 @@ function PlannerSignup() {
           <div className="flex  items-center gap-1">
             <label>Email:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="email"
               value={email}
               placeholder="Enter your email here"
@@ -101,7 +102,7 @@ function PlannerSignup() {
             <label>Password:</label>
             <div className="relative w-full">
               <input
-                className="p-1 pr-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
                 type={isShowing ? "text" : "password"}
                 value={password}
                 placeholder="Enter your password here"
@@ -118,7 +119,7 @@ function PlannerSignup() {
           <div className="flex  items-center gap-1">
             <label>Portfolio Link:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="text"
               value={portfolio}
               onChange={(e) => setportfolio(e.target.value)}
@@ -127,7 +128,7 @@ function PlannerSignup() {
           <div className="flex  items-center gap-1">
             <label>Experience:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="text"
               value={experience}
               onChange={(e) => setexperience(e.target.value)}
@@ -136,7 +137,7 @@ function PlannerSignup() {
           <div className="flex items-center gap-1">
             <label>Age:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="number"
               value={age}
               placeholder="Enter your age here"
@@ -175,7 +176,7 @@ function PlannerSignup() {
           <div className="flex  items-center gap-1">
             <label>PhoneNumber:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="text"
               value={phoneNumber}
               placeholder="Enter your PhoneNumber here"
@@ -184,13 +185,18 @@ function PlannerSignup() {
           </div>
           
         </div>
+        <div className="flex items-center justify-center">
         <button
           type="submit"
-          className={`${issubmitting?'disabled':null} p-1 m-7 w-40 border border-gray-300 rounded-lg bg-blue-600 text-white`}
+          className={`${issubmitting?'disabled':null} p-1 mt-4 m-2 w-40 border border-gray-300 rounded-lg bg-blue-600 text-white`}
           onClick={() => setissubmitting(true)}
         >
-          Sign Up
+            Sign Up
         </button>
+        </div>
+        <div className=" flex items-start">
+        <Link to="/UserSignup" className="text-blue-700 m-2 hover:underline ">Register as  User?</Link>
+        </div>
       </form>
     </div>
   );

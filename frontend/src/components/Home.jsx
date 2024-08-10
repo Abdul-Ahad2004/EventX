@@ -10,6 +10,7 @@ function Home() {
   const [review, setreview] = useState(false);
   const [rating, setrating] = useState("");
   const [feedback, setfeedback] = useState("");
+  const [Id, setId] = useState()
   const Navigate = useNavigate();
   async function getApplicantsNumber(eventId) {
     try {
@@ -22,6 +23,19 @@ function Home() {
       return await response.data.number;
     } catch (error) {
       console.log("Error", error?.response.data || error.message);
+    }
+  }
+  async function getId() {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/user/get-id",
+        {
+          withCredentials: true,
+        }
+      );
+      setId(response.data.userId);
+    } catch (error) {
+      console.log("Error", error);
     }
   }
 
@@ -88,6 +102,7 @@ function Home() {
   useEffect(() => {
     try {
       getevents();
+      getId()
     } catch (error) {
       console.log(error);
     }
@@ -160,7 +175,7 @@ function Home() {
                               <div className="flex items-center gap-1 w-full">
                                 <label>Rating:</label>
                                 <input
-                                  className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
                                   type="Number"
                                   min="1"
                                   max="5"
@@ -172,7 +187,7 @@ function Home() {
                               <div className="flex  items-center gap-1">
                                 <label>Feedback:</label>
                                 <input
-                                  className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
                                   type="text"
                                   value={feedback}
                                   placeholder="Enter your feedback here"
@@ -181,7 +196,7 @@ function Home() {
                               </div>
                               <button
                                 type="submit"
-                                className=" p-1 m-7 w-40 border border-gray-300 rounded-lg bg-blue-600 text-white"
+                                className=" p-1 m-3 w-20 border border-gray-300 rounded-lg bg-blue-600 text-white"
                                 onClick={() =>
                                   postreview(event.assignedPlanner)
                                 }
@@ -198,12 +213,24 @@ function Home() {
                           <button className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
                            onClick={() => {
                             Navigate("/ManageTasks", {
-                              state: { eventId: event._id },
+                              state: { eventId: event._id,isClient: true },
                             });
                           }}>
                             Manage Event Tasks
                           </button>
-                          <button className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                          <button className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300
+                    "
+                    onClick={() => {
+                      Navigate("/Messages", {
+                        state: {
+                          senderId: Id,
+                          senderModel: "User",
+                          receiverId: event.assignedPlanner,
+                          receiverModel: "Planner",
+                        },
+                      });
+                    }}
+                    >
                             Chat with Planner
                           </button>
                           <button

@@ -1,7 +1,8 @@
 import express from "express";
-import { getMessages } from "../controllers/message.js";
+import { getMessages,getChatUsers } from "../controllers/message.js";
 const router = express.Router();
 
-router.get("/:sender/:receiverId", getMessages)
+router.get("/get-messages/:senderId/:receiverId", getMessages)
+router.get("/get-chat-users/:senderId", getChatUsers);
 
 export default router;

@@ -6,6 +6,7 @@ import axios from "axios";
 function Events() {
 
   const [events, setevents] = useState([]);
+  const [Id, setId] = useState()
   const Navigate = useNavigate();
   async function getevents() {
     try {
@@ -20,10 +21,24 @@ function Events() {
       console.log("Error1", error);
     }
   }
+  async function getId() {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/planner/get-id",
+        {
+          withCredentials: true,
+        }
+      );
+      setId(response.data.plannerId);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  }
 
   useEffect(() => {
     try {
       getevents();
+      getId();
     } catch (error) {
       console.log(error);
     }
@@ -71,7 +86,7 @@ function Events() {
                       className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
                       onClick={() => {
                         Navigate("/ManageTasks", {
-                            state: { eventId: event._id },
+                            state: { eventId: event._id,isClient:false },
                           });
                       }}
                     >
@@ -79,7 +94,14 @@ function Events() {
                     </button>
                     <button
                       className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                      onClick={() => {}}
+                      onClick={() => {Navigate("/Messages", {
+                        state: {
+                          senderId: Id,
+                          senderModel: "Planner",
+                          receiverId: event.user,
+                          receiverModel: "User",
+                        },
+                      });}}
                     >
                       Chat
                     </button>

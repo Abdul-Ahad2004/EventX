@@ -14,6 +14,7 @@ import Applications from './components/Applications'
 import ManageTasks from './components/ManageTasks'
 import PlannerHome from './components/PlannerHome'
 import Events from './components/Events'
+import Messages from './components/Messages'
 
 function App() {
 
@@ -64,6 +65,10 @@ function App() {
     {
       path: "/Events",
       element: <Events />,
+    },
+    {
+      path: "/Messages",
+      element: <Messages />,
     },
   ]);
  

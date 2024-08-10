@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Navbar from "./Navbar";
 function PostEvent() {
   const [event, setevent] = useState("");
   const [date, setdate] = useState("");
@@ -46,15 +47,18 @@ function PostEvent() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-5 min-h-screen">
+    <>
+    <Navbar isClient={true}/>
+    <div>
+    <div className="flex flex-col justify-center  min-w-full items-center gap-5 min-h-screen">
       <ToastContainer />
-      <h1 className="text-2xl text-blue-600 font-bold">Post Event Page</h1>
+      <h1 className="text-2xl text-blue-600 font-bold">Post Event </h1>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col  gap-3">
           <div className="flex items-center gap-1 w-full">
             <label>Event Type:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="text"
               value={event}
               placeholder="Enter eventType"
@@ -64,7 +68,7 @@ function PostEvent() {
           <div className="flex  items-center gap-1">
             <label>Location:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="text"
               value={location}
               placeholder="Enter location"
@@ -74,7 +78,7 @@ function PostEvent() {
           <div className="flex  items-center gap-1">
             <label>Date:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="date"
               value={date}
               placeholder="Enter location"
@@ -86,7 +90,7 @@ function PostEvent() {
           <div className="flex items-center gap-1">
             <label>Budget:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="number"
               value={budget}
               placeholder="Enter budget"
@@ -96,7 +100,7 @@ function PostEvent() {
           <div className="flex  items-center gap-1">
             <label>Preferences:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="text"
               value={preferences}
               placeholder="Enter your preferences here"
@@ -105,15 +109,19 @@ function PostEvent() {
           </div>
           
         </div>
+        <div className="flex justify-center">
         <button
           type="submit"
-          className={`${issubmitting?'disabled':null} inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300`}
+          className={`${issubmitting?'disabled':null} inline-flex items-center px-3 py-2 text-sm font-medium text-center m-6 text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300`}
           onClick={() => setissubmitting(true)}
         >
             Post Event
         </button>
+        </div>
       </form>
     </div>
+    </div>
+    </>
   );
 }
 
