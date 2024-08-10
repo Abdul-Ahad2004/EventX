@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import connectDB from "./db/connect.js";
 import plannerRouter from "./routes/planner.js"
 import messageRouter from "./routes/message.js"
+import taskRouter from "./routes/tasks.js"
 import cors from "cors"
 
 dotenv.config();
@@ -23,6 +24,7 @@ app.use(cookieParser())
 app.use("/user", userRouter);
 app.use("/planner",plannerRouter)
 app.use("/messages",messageRouter)
+app.use("/tasks",taskRouter)
 
 
 

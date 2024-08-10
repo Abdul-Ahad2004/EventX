@@ -34,6 +34,7 @@ function Login() {
             withCredentials:true
           }
         );
+        Navigate("/Home");
       } else {
         await axios.post("http://localhost:5000/planner/login", {
           username: name,
@@ -42,12 +43,13 @@ function Login() {
         {
           withCredentials:true
         });
+        Navigate("/PlannerHome");
       }
       setname("");
       setpassword("");
       setuser("Client");
       toast.success("Login successfully");
-      Navigate("/Home");
+     
       setissubmitting(false);
     } catch (error) {
       toast.error(error.response?.data || error.message);

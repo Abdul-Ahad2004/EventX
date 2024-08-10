@@ -18,7 +18,7 @@ function ManageTasks() {
   async function getTasks() {
     try {
       const response = await axios.get(
-        `http://localhost:5000/user/get-tasks/${eventId}`,
+        `http://localhost:5000/tasks/get-tasks/${eventId}`,
         {
           withCredentials: true,
         }
@@ -36,7 +36,7 @@ function ManageTasks() {
   const AddTask = async () => {
     try {
       await axios.post(
-        `http://localhost:5000/user/add-tasks/${eventId}`,
+        `http://localhost:5000/tasks/add-tasks/${eventId}`,
         {
           Task,
         },
@@ -54,7 +54,7 @@ function ManageTasks() {
 
   const DeleteTask = async (task) => {
     try {
-      await axios.delete(`http://localhost:5000/user/delete-tasks/${eventId}`, {
+      await axios.delete(`http://localhost:5000/tasks/delete-tasks/${eventId}`, {
         data: { Task: task },
         withCredentials: true,
       });
@@ -68,7 +68,7 @@ function ManageTasks() {
   const EditTask = async (task) => {
     try {
       await axios.delete(
-        `http://localhost:5000/user/delete-tasks/${eventId}`,
+        `http://localhost:5000/tasks/delete-tasks/${eventId}`,
        
         {
             data: { Task: task },
@@ -86,7 +86,7 @@ function ManageTasks() {
     try {
       let name = e.target.name;
       await axios.put(
-        `http://localhost:5000/user/update-tasks/${eventId}`,{
+        `http://localhost:5000/tasks/update-tasks/${eventId}`,{
          Task:name
         },
         {

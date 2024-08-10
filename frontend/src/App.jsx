@@ -12,6 +12,8 @@ import {
 import PostEvent from './components/PostEvent'
 import Applications from './components/Applications'
 import ManageTasks from './components/ManageTasks'
+import PlannerHome from './components/PlannerHome'
+import Events from './components/Events'
 
 function App() {
 
@@ -54,6 +56,14 @@ function App() {
     {
       path: "/ManageTasks",
       element: <ManageTasks />,
+    },
+    {
+      path: "/PlannerHome",
+      element: <PlannerHome />,
+    },
+    {
+      path: "/Events",
+      element: <Events />,
     },
   ]);
  

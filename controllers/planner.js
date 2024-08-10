@@ -144,6 +144,41 @@ export class PlannerController {
     }
   }
 
+  static async myEvents(req, res) {
+    try {
+      const token = req.cookies?.plannerId;
+      const plannerId = jwt.verify(token, "secret").data;
+      if (!plannerId) {
+        return res
+          .status(400)
+          .json({ message: "Planner is not authenticated" });
+      }
+      const events = await Event.find({assignedPlanner:plannerId});
+     
+      return res
+        .status(201)
+        .json({ events, message: "Events fetched successfully" });
+    } catch (error) {
+      console.log("Error", error);
+    }
+  }
+  static async getId(req, res) {
+    try {
+      const token = req.cookies?.plannerId;
+      const plannerId = jwt.verify(token, "secret").data;
+      if (!plannerId) {
+        return res
+          .status(400)
+          .json({ message: "Planner is not authenticated" });
+      }
+      return res
+        .status(201)
+        .json({ plannerId, message: "Events fetched successfully" });
+    } catch (error) {
+      console.log("Error", error);
+    }
+  }
+
   static async addRequest(req, res) {
     try {
       const eventId = req.params.eventId;
