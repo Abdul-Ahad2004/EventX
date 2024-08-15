@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function UserSignup() {
   const [name, setname] = useState("");
@@ -72,7 +73,7 @@ function UserSignup() {
           <div className="flex items-center gap-1 w-full">
             <label>Username:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="text"
               value={name}
               placeholder="Enter your name here"
@@ -82,7 +83,7 @@ function UserSignup() {
           <div className="flex  items-center gap-1">
             <label>Email:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="email"
               value={email}
               placeholder="Enter your email here"
@@ -93,7 +94,7 @@ function UserSignup() {
             <label>Password:</label>
             <div className="relative w-full">
               <input
-                className="p-1 pr-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
                 type={isShowing ? "text" : "password"}
                 value={password}
                 placeholder="Enter your password here"
@@ -110,7 +111,7 @@ function UserSignup() {
           <div className="flex items-center gap-1">
             <label>Age:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="number"
               value={age}
               placeholder="Enter your age here"
@@ -149,7 +150,7 @@ function UserSignup() {
           <div className="flex  items-center gap-1">
             <label>PhoneNumber:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="text"
               value={phoneNumber}
               placeholder="Enter your PhoneNumber here"
@@ -158,16 +159,30 @@ function UserSignup() {
           </div>
           
         </div>
+       <div className="flex items-center justify-center">
         <button
           type="submit"
-          className={`${issubmitting?'disabled':null} p-1 m-7 w-40 border border-gray-300 rounded-lg bg-blue-600 text-white`}
+          className={`${issubmitting?'disabled':null} p-1 mt-7 w-40 border border-gray-300 rounded-lg bg-blue-600 text-white`}
           onClick={() => setissubmitting(true)}
         >
             Sign Up
         </button>
+        </div>
+        <div className=" flex items-start">
+        <Link to="/PlannerSignup" className="text-blue-700 m-2 hover:underline ">Register as  Planner?</Link>
+        </div>
       </form>
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
 
 export default UserSignup;

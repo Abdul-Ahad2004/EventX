@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
   const [name, setname] = useState("");
@@ -66,7 +66,7 @@ function Login() {
           <div className="flex items-center gap-1 w-full">
             <label>Username:</label>
             <input
-              className="p-1 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
               type="text"
               value={name}
               placeholder="Enter your name here"
@@ -78,10 +78,10 @@ function Login() {
             <label>Password:</label>
             <div className="relative w-full">
               <input
-                className="p-1 pr-7 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
                 type={isShowing ? "text" : "password"}
                 value={password}
-                placeholder="Enter your password here"
+                placeholder="Enter password here"
                 onChange={(e) => setpassword(e.target.value)}
               />
               <span
@@ -127,11 +127,14 @@ function Login() {
           type="submit"
           className={`${
             issubmitting ? "disabled" : null
-          } p-1 m-7 w-40 border border-gray-300 rounded-lg bg-blue-600 text-white`}
+          } p-1 mt-7 m-2 w-40 border border-gray-300 rounded-lg bg-blue-600 text-white`}
           onClick={() => setissubmitting(true)}
         >
           Login
         </button>
+        <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
+            Not registered? <Link to="/UserSignup" className="text-blue-700 hover:underline ">Create account</Link>
+        </div>
       </form>
     </div>
   );
