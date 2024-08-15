@@ -132,7 +132,9 @@ export class PlannerController {
 
   static async getEvents(req, res) {
     try {
-      const events = await Event.find({});
+      const events = await Event.find({
+        assignedPlanner:null
+        });
       if (!events) {
         return res.status(500).json("Error in fetching events");
       }

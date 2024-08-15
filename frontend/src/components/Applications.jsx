@@ -86,8 +86,8 @@ async function assignPlanner(plannerId){
                   <div className="mb-3 font-normal text-gray-700">
                     Phone Number: {planner.phoneNumber}
                   </div>
-                  <div className="mb-3 font-normal text-gray-700">
-                    Portfolio: <a href="http://" target="_blank">{planner.portfolio}</a>
+                  <div className="mb-3 font-normal text-gray-700 w-full">
+                    Portfolio: <a className="text-blue-500" href={planner.portfolio} target="_blank">{planner.portfolio}</a>
                   </div>
                   <div className="mb-3 font-normal text-gray-700">
                     Age: {planner.age}

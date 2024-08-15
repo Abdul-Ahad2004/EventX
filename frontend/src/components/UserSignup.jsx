@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function UserSignup() {
   const [name, setname] = useState("");
@@ -15,6 +15,7 @@ function UserSignup() {
   const [gender, setgender] = useState("Male");
   const [isShowing, setisShowing] = useState(false);
   const [issubmitting, setissubmitting] = useState(false);
+  const Navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     try {
@@ -57,6 +58,7 @@ function UserSignup() {
       setphoneNumber("");
       setgender("Male");
       toast.success("Sign Up successfully");
+      Navigate("/");
       setissubmitting(false);
     } catch (error) {
       toast.error(error.response?.data|| error.message);
